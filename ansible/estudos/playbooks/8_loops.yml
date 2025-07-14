@@ -1,0 +1,27 @@
+---
+- name: Ansible Loops
+  hosts: all
+  vars:
+    remove: true
+  tasks:
+    - name: USER | Add user in loop
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        comment: "{{ item.comment }}"
+        state: present
+      loop:
+        - { name: "eddie", comment: "Van Halen" }
+        - { name: "dime", comment: "Pantera" }
+        - { name: "aylor", comment: "Foo Fighters" }
+      when: not remove
+
+    - name: USER | Remove user in loop
+      ansible.builtin.user:
+        name: "{{ item }}"
+        state: absent
+        remove: true
+      loop:
+        - "ozzy"
+        - "dime"
+        - "aylor"
+      when: remove | bool

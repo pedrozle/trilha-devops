@@ -1,0 +1,24 @@
+services:
+
+  zabbix-server:
+    container_name: zabbix-server
+    image: zabbix/zabbix-server-pgsql:alpine-7.0-latest
+    restart: always
+    ports:
+      - "10051:10051"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    environment:
+      ZBX_CACHESIZE: 4096M
+      ZBX_HISTORYCACHESIZE: 1024M
+      ZBX_HISTORYINDEXCACHESIZE: 1024M
+      ZBX_TRENDCACHESIZE: 1024M
+      ZBX_VALUECACHESIZE: 1024M
+      ZBX_ENABLE_SNMP_TRAPS: "true"
+      DB_SERVER_HOST: "172.22.3.21"
+      DB_PORT: 5432
+      POSTGRES_USER: "zabbix"
+      POSTGRES_PASSWORD: "zabbix123"
+      POSTGRES_DB: "zabbix_db"
+

@@ -1,0 +1,13 @@
+---
+- name: Ansible Handlers
+  hosts: all
+  tasks:
+    - name: NGINX | Change Listener
+      ansible.builtin.debug:
+        msg: "Executando ação, em caso de sucesso notifica handler"
+      notify: Restart Nginx
+
+  handlers:
+    - name: Restart Nginx
+      ansible.builtin.debug:
+        msg: "Executando ação. Nginx reiniciado"

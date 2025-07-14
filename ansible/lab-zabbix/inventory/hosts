@@ -1,0 +1,23 @@
+###############
+#    Hosts    #
+###############
+# 172.22.3.21 #
+# 172.22.3.22 #
+# 172.22.3.23 #
+###############
+
+[frontend]
+localhost ansible_connection=local
+
+[db]
+172.22.3.21
+
+[zserver]
+172.22.3.22
+
+[agent]
+172.22.3.23
+
+[all:vars]
+ansible_user=pedro
+ansible_become_password=pedro

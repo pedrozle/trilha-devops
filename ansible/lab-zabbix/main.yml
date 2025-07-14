@@ -1,0 +1,29 @@
+---
+
+- name: Main playbook
+  hosts: all
+
+  pre_tasks:
+    - name: APT | Update system
+      ansible.builtin.apt:
+        name: "*"
+        state: latest
+        update_cache: true
+      tags: update_sys
+    
+    - name: Dir | Creating directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0700'
+        owner: root
+        group: root
+      loop:
+        - /etc/apt/keyrings
+        - /root/zabbix
+      tags: dir_create
+
+  roles:
+    - docker
+    - db
+    - zabbix

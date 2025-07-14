@@ -1,0 +1,14 @@
+---
+
+- name: Update SO
+  hosts: all
+  become: true  # <--- Adiciona privilégio de root
+  tags: update
+  tasks:
+    - name: APT | Update System
+      ansible.builtin.apt:
+        name: "*"
+        state: latest
+        update_cache: yes
+        
+...

@@ -1,0 +1,20 @@
+services:
+  db:
+    container_name: zabbix_db
+    image: postgres:16-bullseye
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - zbx_db16:/var/lib/postgresql/data
+      - /etc/postgresql/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+    environment:
+      POSTGRES_USER: "zabbix"
+      POSTGRES_PASSWORD: "zabbix123"
+      POSTGRES_DB: "zabbix_db"
+    command: >
+      postgres
+      -c hba_file=/etc/postgresql/pg_hba.conf
+
+volumes:
+  zbx_db16:

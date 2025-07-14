@@ -1,0 +1,16 @@
+---
+
+- name: Testing Variables
+  hosts: all
+  vars:
+    message_inline: "Var no playbook"
+  vars_files: varfiles.yml
+  tasks:
+    - name: Debug 01
+      ansible.builtin.debug:
+        msg: "{{ message_inline }}"
+        
+    - name: Debug 02
+      ansible.builtin.debug:
+        msg: "{{ message }}"
+...

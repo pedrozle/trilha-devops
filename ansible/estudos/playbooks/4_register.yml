@@ -1,0 +1,16 @@
+---
+
+- name: Ansible Register Filters
+  hosts: all
+  tasks:
+    - name: SISOP | Find files
+      find:
+        path: /home/pedro/data
+        patterns: '*.*' # '*.json' | 'example.*'
+      register: output
+    
+    - name: SISOP | Show files
+      debug: 
+        msg: "{{ output.files | map(attribute='path') }}"
+        
+...

@@ -1,0 +1,9 @@
+---
+- name: Reboot Ubuntu VMs
+  hosts: all
+  become: true
+  tasks:
+    - name: Reboot with extended timeout for VMs
+      ansible.builtin.reboot:
+        reboot_timeout: 120  # 5 minutos
+        test_command: whoami

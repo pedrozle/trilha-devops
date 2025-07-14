@@ -1,0 +1,7 @@
+---
+
+- name: Main playbook
+  hosts: all
+  roles:
+    # - nginx
+    - zabbix-stack

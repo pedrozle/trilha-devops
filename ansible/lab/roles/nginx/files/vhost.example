@@ -1,0 +1,15 @@
+server {
+    listen 80;
+    server_name meusite.com www.meusite.com;
+
+    root /var/www/html/a;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}

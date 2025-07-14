@@ -1,0 +1,77 @@
+#SPDX-License-Identifier: MIT-0
+---
+
+- name: APT | Update System
+  ansible.builtin.apt:
+    name: '*'
+    state: latest
+    update_cache: true
+  tags: update_sys
+
+- name: NGINX | Installing nginx latest
+  ansible.builtin.apt:
+    name: 'nginx'
+    state: latest
+  tags: install_nginx
+
+- name: NGINX | Creating directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: 700
+    owner: root
+    group: root
+  with_items:
+    - /etc/nginx/features
+    - /etc/nginx/cert
+    - /etc/nginx/vhosts.d
+  tags: configure_nginx
+
+- name: NGINX | Copying files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+    backup: true
+  with_items:
+    - { src: 'nginx.conf', dest: '/etc/nginx/nginx.conf' }
+    # - { src: 'gzip.conf', dest: '/etc/nginx/features/gzip.conf' }
+    # - { src: 'ssl.conf', dest: '/etc/nginx/features/ssl.conf' }
+    - { src: 'vhost.example', dest: '/etc/nginx/vhosts.d/vhost.example' }
+    # - { src: 'dhparam.pem', dest: '/etc/nginx/cert/dhparam.pem' }
+  tags: copy_nginx_files
+
+- name: Ensure nginx user exists
+  ansible.builtin.user:
+    name: nginx
+    shell: /usr/sbin/nologin
+    system: yes
+
+- name: NGINX | Ensure nginx is running and enabled
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+  tags: nginx_service
+
+- name: NGINX | Creating nginx root directory
+  ansible.builtin.file:
+    path: "{{ root_dir }}"
+    state: directory
+    mode: 0775
+    owner: nginx
+    group: nginx
+    recurse: true
+
+- name: NGINX | Extract static website
+  ansible.builtin.unarchive:
+    src: website.tar.gz
+    dest: "{{ root_dir }}"
+    owner: nginx
+    group: nginx
+    remote_src: false
+  notify: NGINX | Restart Service
+

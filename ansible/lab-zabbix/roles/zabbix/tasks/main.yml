@@ -1,0 +1,52 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for zabbix
+
+- name: Zabbix | Cria diretório do compose
+  ansible.builtin.file:
+    path: /opt/zabbix_compose
+    state: directory
+  when: "'db' not in group_names"
+
+- name: Zabbix | Copia docker-compose.yml
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+    backup: true
+  loop:
+    - {
+        src: "zagent.yml",
+        dest: "/opt/zabbix_compose/zagent.yml",
+      }
+    - {
+        src: "zserver.yml",
+        dest: "/opt/zabbix_compose/zserver.yml",
+      }
+    - {
+        src: "zfrontend.yml",
+        dest: "/opt/zabbix_compose/zfrontend.yml",
+      }
+  tags: copy_compose_files
+  when: "'db' not in group_names"
+
+- name: Zabbix | Ativa Server
+  shell: docker compose -f /opt/zabbix_compose/zserver.yml -f /opt/zabbix_compose/zagent.yml up -d
+  args:
+    chdir: /opt/zabbix_compose
+  when: "'zserver' in group_names"
+
+- name: Zabbix | Ativa Agent
+  shell: docker compose -f /opt/zabbix_compose/zagent.yml  up -d
+  args:
+    chdir: /opt/zabbix_compose
+  when: "'agent' in group_names"
+
+- name: Zabbix | Ativa Frontend
+  shell: docker compose -f /opt/zabbix_compose/zfrontend.yml up -d
+  args:
+    chdir: /opt/zabbix_compose
+  when: "'frontend' in group_names"

@@ -1,0 +1,50 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for db
+- name: DB | Cria diretório do compose
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/zabbix_db
+    - /etc/postgresql
+  when: "'db' in group_names"
+
+- name: DB | Copia docker-compose.yml
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+    backup: true
+  loop:
+    - {
+        src: "docker-compose.yml",
+        dest: "/opt/zabbix_db/docker-compose.yml",
+      }
+  tags: copy_compose_files
+  when: "'db' in group_names"
+
+- name: DB | Gera pg_hba.conf
+  ansible.builtin.copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      owner: root
+      group: root
+      mode: 0644
+      force: true
+      backup: true
+  loop:
+    - {
+        src: "pg_hba.conf.j2",
+        dest: "/etc/postgresql/pg_hba.conf",
+      }
+  when: "'db' in group_names"
+
+- name: DB | Inicia o banco com Docker Compose
+  shell: docker compose up -d
+  args:
+    chdir: /opt/zabbix_db
+  when: "'db' in group_names"

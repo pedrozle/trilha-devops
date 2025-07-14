@@ -1,0 +1,5 @@
+---
+- name: Execute Roles
+  hosts: all
+  roles:
+    - linux-update

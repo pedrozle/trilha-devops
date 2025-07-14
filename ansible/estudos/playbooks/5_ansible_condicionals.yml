@@ -1,0 +1,37 @@
+---
+
+- name: Ansible conditionals (when)
+  hosts: all
+  vars:
+    backup: false
+  tasks:
+    - name: DNF | Update Systems
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_cache: yes
+      when: ansible_distribution == "Rocky" # pode usar and | or
+    
+    - name: APT | Update cache
+      ansible.builtin.apt:
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: APT | Update Systems
+      ansible.builtin.apt:
+        name: "*"
+        state: latest
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Run the task if 'backup'  is true
+      ansible.builtin.debug:
+        msg: "Congrats dude"
+      when: backup | bool
+
+    - name: Run the task if 'backup' is false
+      ansible.builtin.debug:
+        msg: "CRITICAL. Make backup :O"
+      when: not backup
+
+...

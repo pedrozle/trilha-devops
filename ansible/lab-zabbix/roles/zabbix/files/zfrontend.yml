@@ -1,0 +1,26 @@
+services:
+
+  zabbix-web-nginx-pgsql:
+    container_name: zabbix-web
+    image: zabbix/zabbix-web-nginx-pgsql:alpine-7.0-latest
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./cert/:/usr/share/zabbix/conf/certs/:ro
+    environment:
+      ZBX_SERVER_HOST: "172.22.3.22"
+      DB_SERVER_HOST: "172.22.3.21"
+      DB_PORT: 5432
+      POSTGRES_USER: "zabbix"
+      POSTGRES_PASSWORD: "zabbix123"
+      POSTGRES_DB: "zabbix_db"
+      ZBX_MEMORYLIMIT: "1024M"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s

@@ -1,0 +1,15 @@
+---
+- name: Shutdown Services
+  hosts: all
+  tasks:
+    - name: Shutdown Docker
+      community.docker.docker_container:
+        name: "{{ item }}"
+        state: stopped
+      loop:
+        - grafana
+        - portainer
+        - zabbix_db
+        - zabbix-server
+        - zabbix-web
+        - zabbix-agent

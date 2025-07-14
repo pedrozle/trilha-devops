@@ -1,0 +1,14 @@
+---
+- name: Ansible Loops Control
+  hosts: all
+  tasks:
+    - name: APT | Install packages
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - vim
+        - net-tools
+        - screen
+      loop_control:
+        pause: 3

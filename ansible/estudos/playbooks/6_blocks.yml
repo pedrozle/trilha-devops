@@ -1,0 +1,19 @@
+---
+- name: Ansible Blocks-Rescue-Always
+  hosts: all
+  tasks:
+    - block:
+        - ansible.builtin.debug:
+            msg: " #### Executando normalmente ####"
+        - name: Simulando erros
+          ansible.builtin.shell: ./configure
+          args:
+            chdir: /tmp
+        - ansible.builtin.debug:
+            msg: "Nunca será executado"
+      rescue:
+        - ansible.builtin.debug:
+            msg: "ERRO - Falha no alvo {{ inventory_hostname }}"
+      always:
+        - name: SISOP | Update system
+          ansible.builtin.apt: name=* state=latest

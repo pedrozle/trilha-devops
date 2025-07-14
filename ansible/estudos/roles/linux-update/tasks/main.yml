@@ -1,0 +1,8 @@
+---
+- name: DNF | Update Systems
+  import_tasks: rocky.yml
+  when: ansible_distribution == "Rocky" 
+    
+- name: APT | Update Systems
+  import_tasks: ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
