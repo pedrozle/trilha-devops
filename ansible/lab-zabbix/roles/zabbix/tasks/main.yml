@@ -14,14 +14,10 @@
     dest: "{{ item.dest }}"
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
     force: true
     backup: true
   loop:
-    - {
-        src: "zagent.yml",
-        dest: "/opt/zabbix_compose/zagent.yml",
-      }
     - {
         src: "zserver.yml",
         dest: "/opt/zabbix_compose/zserver.yml",
@@ -32,6 +28,14 @@
       }
   tags: copy_compose_files
   when: "'db' not in group_names"
+
+- name: Zabbix | Copia docker-compose.yml
+  template:
+    src: zagent.yml.j2
+    dest: /opt/zabbix_compose/zagent.yml
+    owner: root
+    group: root
+    mode: '0644'
 
 - name: Zabbix | Ativa Server
   shell: docker compose -f /opt/zabbix_compose/zserver.yml -f /opt/zabbix_compose/zagent.yml up -d

@@ -11,6 +11,6 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /run/docker.sock:/var/run/docker.sock
     environment:
-      ZBX_HOSTNAME: "zabbix7"
+      ZBX_HOSTNAME: "{{ inventory_hostname }}"
       ZBX_SERVER_HOST: "172.22.3.22"
       ZBX_ENABLEREMOTECOMMANDS: "1"
