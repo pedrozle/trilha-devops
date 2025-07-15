@@ -36,6 +36,7 @@
     owner: root
     group: root
     mode: '0644'
+  when: "'db' not in group_names"
 
 - name: Zabbix | Ativa Server
   shell: docker compose -f /opt/zabbix_compose/zserver.yml -f /opt/zabbix_compose/zagent.yml up -d
