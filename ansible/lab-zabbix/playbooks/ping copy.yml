@@ -1,8 +1,0 @@
----
-- name: Ping SO
-  hosts: all
-  become: true # <--- Adiciona privilégio de root
-  tasks:
-    - name: Ping | Update System
-      ansible.builtin.debug:
-        msg: "Pingado guys"
